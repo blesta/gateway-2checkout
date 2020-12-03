@@ -5,12 +5,12 @@
  * See the API files for links to the 2Checkout API documentation and configuration instructions
  *
  * @package blesta
- * @subpackage blesta.components.gateways._2checkout
- * @copyright Copyright (c) 2019, Phillips Data, Inc.
+ * @subpackage blesta.components.gateways.checkout2
+ * @copyright Copyright (c) 2020, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
-class _2checkout extends NonmerchantGateway
+class Checkout2 extends NonmerchantGateway
 {
     /**
      * @var array An array of meta data for this gateway
@@ -28,7 +28,7 @@ class _2checkout extends NonmerchantGateway
         Loader::loadComponents($this, ['Input', 'Json']);
 
         // Load the language required by this gateway
-        Language::loadLang('_2checkout', null, dirname(__FILE__) . DS . 'language' . DS);
+        Language::loadLang('checkout2', null, dirname(__FILE__) . DS . 'language' . DS);
     }
 
     /**
@@ -42,7 +42,7 @@ class _2checkout extends NonmerchantGateway
         if (version_compare($current_version, '2.0.0', '<')) {
             Loader::loadModels($this, ['GatewayManager']);
 
-            $gateways = $this->GatewayManager->getByClass('_2checkout');
+            $gateways = $this->GatewayManager->getByClass('Checkout2');
 
             foreach ($gateways as $gateway) {
                 $meta = ['api_version' => 'v1'];
@@ -98,14 +98,14 @@ class _2checkout extends NonmerchantGateway
                 'valid' => [
                     'if_set' => true,
                     'rule' => ['array_key_exists', $this->getApiVersions()],
-                    'message' => Language::_('_2Checkout.!error.api_version.valid', true)
+                    'message' => Language::_('Checkout2.!error.api_version.valid', true)
                 ]
             ],
             'test_mode' => [
                 'valid' => [
                     'if_set' => true,
                     'rule' => ['in_array', ['true', 'false']],
-                    'message' => Language::_('_2Checkout.!error.test_mode.valid', true)
+                    'message' => Language::_('Checkout2.!error.test_mode.valid', true)
                 ]
             ]
         ];
@@ -115,21 +115,21 @@ class _2checkout extends NonmerchantGateway
                 'empty' => [
                     'rule' => 'isEmpty',
                     'negate' => true,
-                    'message' => Language::_('_2Checkout.!error.vendor_id.empty', true)
+                    'message' => Language::_('Checkout2.!error.vendor_id.empty', true)
                 ]
             ];
             $rules['secret_word'] = [
                 'empty' => [
                     'rule' => 'isEmpty',
                     'negate' => true,
-                    'message' => Language::_('_2Checkout.!error.secret_word.empty', true)
+                    'message' => Language::_('Checkout2.!error.secret_word.empty', true)
                 ]
             ];
             $rules['sandbox'] = [
                 'valid' => [
                     'if_set' => true,
                     'rule' => ['in_array', ['true', 'false']],
-                    'message' => Language::_('_2Checkout.!error.sandbox.valid', true)
+                    'message' => Language::_('Checkout2.!error.sandbox.valid', true)
                 ]
             ];
 
@@ -142,21 +142,21 @@ class _2checkout extends NonmerchantGateway
                 'empty' => [
                     'rule' => 'isEmpty',
                     'negate' => true,
-                    'message' => Language::_('_2Checkout.!error.merchant_code.empty', true)
+                    'message' => Language::_('Checkout2.!error.merchant_code.empty', true)
                 ]
             ];
             $rules['buy_link_secret_word'] = [
                 'empty' => [
                     'rule' => 'isEmpty',
                     'negate' => true,
-                    'message' => Language::_('_2Checkout.!error.buy_link_secret_word.empty', true)
+                    'message' => Language::_('Checkout2.!error.buy_link_secret_word.empty', true)
                 ]
             ];
             $rules['secret_key'] = [
                 'empty' => [
                     'rule' => 'isEmpty',
                     'negate' => true,
-                    'message' => Language::_('_2Checkout.!error.secret_key.empty', true)
+                    'message' => Language::_('Checkout2.!error.secret_key.empty', true)
                 ]
             ];
         }
@@ -338,7 +338,7 @@ class _2checkout extends NonmerchantGateway
                     'total' => $amount,
                     'pay_method' => 'CC', // default to credit card option
                     'x_Receipt_Link_URL' => Configure::get('Blesta.gw_callback_url')
-                        . Configure::get('Blesta.company_id') . '/_2checkout/',
+                        . Configure::get('Blesta.company_id') . '/checkout2/',
                     // Pre-populate billing information
                     'card_holder_name' => $this->Html->concat(
                         ' ',
@@ -423,8 +423,8 @@ class _2checkout extends NonmerchantGateway
     private function getApiVersions()
     {
         return [
-            'v1' => Language::_('_2Checkout.getapiversions.v1', true),
-            'v5' => Language::_('_2Checkout.getapiversions.v5', true)
+            'v1' => Language::_('Checkout2.getapiversions.v1', true),
+            'v5' => Language::_('Checkout2.getapiversions.v5', true)
         ];
     }
 
@@ -470,19 +470,19 @@ class _2checkout extends NonmerchantGateway
                                 )
                             )
                         ],
-                        'message' => Language::_('_2Checkout.!error.key.valid', true)
+                        'message' => Language::_('Checkout2.!error.key.valid', true)
                     ]
                 ],
                 'credit_card_processed' => [
                     'completed' => [
                         'rule' => ['compares', '==', 'Y'],
-                        'message' => Language::_('_2Checkout.!error.credit_card_processed.completed', true)
+                        'message' => Language::_('Checkout2.!error.credit_card_processed.completed', true)
                     ]
                 ],
                 'sid' => [
                     'valid' => [
                         'rule' => ['compares', '==', $this->ifSet($this->meta['vendor_id'])],
-                        'message' => Language::_('_2Checkout.!error.sid.valid', true)
+                        'message' => Language::_('Checkout2.!error.sid.valid', true)
                     ]
                 ]
             ];
@@ -519,7 +519,7 @@ class _2checkout extends NonmerchantGateway
                             '==',
                             hash_hmac('md5', $ipn_hash_string, $this->ifSet($this->meta['secret_key']))
                         ],
-                        'message' => Language::_('_2Checkout.!error.hash.valid', true)
+                        'message' => Language::_('Checkout2.!error.hash.valid', true)
                     ]
                 ]
             ];
@@ -671,22 +671,22 @@ class _2checkout extends NonmerchantGateway
      * Gets the API class for the given version
      *
      * @param string $version The API version to fetch
-     * @return \_2checkoutApi
+     * @return \Checkout2ApiV1|\Checkout2ApiV5
      */
     private function getApi($version)
     {
         if (strtolower($version) == 'v1') {
             // Load the 2Checkout API
-            Loader::load(dirname(__FILE__) . DS . 'api' . DS . '_2checkout_api_v1.php');
-            return new _2checkoutApiV1(
+            Loader::load(dirname(__FILE__) . DS . 'api' . DS . 'checkout2_api_v1.php');
+            return new Checkout2ApiV1(
                 $this->ifSet($this->meta['api_username']),
                 $this->ifSet($this->meta['api_password']),
                 $this->ifSet($this->meta['sandbox'], 'false')
             );
         } else {
             // Load the 2Checkout API
-            Loader::load(dirname(__FILE__) . DS . 'api' . DS . '_2checkout_api_v5.php');
-            return new _2checkoutApiV5(
+            Loader::load(dirname(__FILE__) . DS . 'api' . DS . 'checkout2_api_v5.php');
+            return new Checkout2ApiV5(
                 $this->ifSet($this->meta['merchant_code']),
                 $this->ifSet($this->meta['secret_key'])
             );

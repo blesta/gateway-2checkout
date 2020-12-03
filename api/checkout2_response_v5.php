@@ -1,16 +1,16 @@
 <?php
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '_2checkout_response.php';
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_response.php';
 
 /**
  * 2Checkout API V5 Response
  *
  * @package blesta
- * @subpackage blesta.components.gateways._2checkout.api
- * @copyright Copyright (c) 2019, Phillips Data, Inc.
+ * @subpackage blesta.components.gateways.checkout2.api
+ * @copyright Copyright (c) 2020, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
-class _2checkoutResponseV5 extends _2checkoutResponse
+class Checkout2ResponseV5 extends Checkout2Response
 {
     /**
      * 2checkoutResponse constructor.

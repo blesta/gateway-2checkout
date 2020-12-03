@@ -3,12 +3,12 @@
  * 2Checkout API
  *
  * @package blesta
- * @subpackage blesta.components.gateways._2checkout.api
- * @copyright Copyright (c) 2019, Phillips Data, Inc.
+ * @subpackage blesta.components.gateways.checkout2.api
+ * @copyright Copyright (c) 2020, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
-abstract class _2checkoutApi
+abstract class Checkout2Api
 {
     /**
      * Fetches the url to redirect clients to for payment in 2Checkout
@@ -21,7 +21,7 @@ abstract class _2checkoutApi
      * Refunds a charge in 2Checkout
      *
      * @param array $params A list of parameters for issuing a refund
-     * @return \_2checkoutResponse
+     * @return \Checkout2Response
      */
     abstract public function refund(array $params);
 }

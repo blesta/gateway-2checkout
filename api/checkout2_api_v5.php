@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '_2checkout_api.php';
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '_2checkout_response_v5.php';
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_api.php';
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_response_v5.php';
 
 /**
  * 2Checkout API V5
@@ -17,12 +17,12 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '_2checkout_response_v5.p
  *      IPN URLs: Add a URL that 2checkout will send formatted order info to when the order status is changed
  *
  * @package blesta
- * @subpackage blesta.components.gateways._2checkout.api
- * @copyright Copyright (c) 2019, Phillips Data, Inc.
+ * @subpackage blesta.components.gateways.checkout2.api
+ * @copyright Copyright (c) 2020, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
-class _2checkoutApiV5 extends _2checkoutApi
+class Checkout2ApiV5 extends Checkout2Api
 {
     /**
      * @var string The URL to post payments to
@@ -55,7 +55,7 @@ class _2checkoutApiV5 extends _2checkoutApi
      * @param string $route The path to the API method
      * @param array $body The data to be sent
      * @param string $method Data transfer method (POST, GET, PUT, DELETE)
-     * @return \_2CheckoutResponse
+     * @return \Checkout2Response
      */
     private function apiRequest($route, array $body, $method)
     {
@@ -99,14 +99,14 @@ class _2checkoutApiV5 extends _2checkoutApi
                 'status' => 500
             ];
 
-            return new _2CheckoutResponseV5(['content' => json_encode($error), 'headers' => []]);
+            return new Checkout2ResponseV5(['content' => json_encode($error), 'headers' => []]);
         }
         curl_close($curl);
 
         $data = explode("\n", $result);
 
         // Return request response
-        return new _2CheckoutResponseV5(
+        return new Checkout2ResponseV5(
             ['content' => $data[count($data) - 1], 'headers' => array_splice($data, 0, count($data) - 1)]
         );
     }
@@ -125,7 +125,7 @@ class _2checkoutApiV5 extends _2checkoutApi
      * Refunds a charge in 2Checkout
      *
      * @param array $params A list of parameters for issuing a refund
-     * @return \_2CheckoutResponse
+     * @return \Checkout2Response
      */
     public function refund(array $params)
     {

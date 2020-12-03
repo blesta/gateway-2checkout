@@ -9,16 +9,16 @@ This is a nonmerchant gateway for Blesta that integrates with [2Checkout](https:
 1. You can install the gateway via composer:
 
     ```
-    composer require blesta/2checkout
+    composer require blesta/checkout2
     ```
 
-2. Upload the source code to a /components/gateways/nonmerchant/2checkout/ directory within
+2. Upload the source code to a /components/gateways/nonmerchant/checkout2/ directory within
 your Blesta installation path.
 
     For example:
 
     ```
-    /var/www/html/blesta/components/nonmerchant/2checkout/
+    /var/www/html/blesta/components/nonmerchant/checkout2/
     ```
 
 3. Log in to your admin Blesta account and navigate to

@@ -3,12 +3,12 @@
  * 2Checkout API Response
  *
  * @package blesta
- * @subpackage blesta.components.gateways._2checkout.api
- * @copyright Copyright (c) 2019, Phillips Data, Inc.
+ * @subpackage blesta.components.gateways.checkout2.api
+ * @copyright Copyright (c) 2020, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
-abstract class _2checkoutResponse
+abstract class Checkout2Response
 {
     /**
      * @var string The status code of this response

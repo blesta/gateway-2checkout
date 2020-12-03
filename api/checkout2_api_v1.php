@@ -1,6 +1,6 @@
 <?php
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '_2checkout_api.php';
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '_2checkout_response_v1.php';
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_api.php';
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_response_v1.php';
 
 /**
  * 2Checkout API V1
@@ -18,12 +18,12 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . '_2checkout_response_v1.p
  *      Grant a user access to the API and "API Updating"
  *
  * @package blesta
- * @subpackage blesta.components.gateways._2checkout.api
- * @copyright Copyright (c) 2019, Phillips Data, Inc.
+ * @subpackage blesta.components.gateways.checkout2.api
+ * @copyright Copyright (c) 2020, Phillips Data, Inc.
  * @license http://www.blesta.com/license/ The Blesta License Agreement
  * @link http://www.blesta.com/ Blesta
  */
-class _2checkoutApiV1 extends _2checkoutApi
+class Checkout2ApiV1 extends Checkout2Api
 {
     /**
      * @var string The URL to post payments to
