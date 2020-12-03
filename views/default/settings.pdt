@@ -2,69 +2,69 @@
 	<ul>
         <li>
             <?php
-            $this->Form->label($this->_('_2Checkout.api_version', true), '_2Checkout_api_version');
-            $this->Form->fieldSelect('api_version', $this->Html->ifSet($versions), $this->Html->ifSet($meta['api_version']), ['id' => '_2Checkout_api_version']);
+            $this->Form->label($this->_('Checkout2.api_version', true), 'Checkout2_api_version');
+            $this->Form->fieldSelect('api_version', $this->Html->ifSet($versions), $this->Html->ifSet($meta['api_version']), ['id' => 'Checkout2_api_version']);
             ?>
         </li>
 		<li class="2checkout_v1_field">
 			<?php
-            $this->Form->label($this->_('_2Checkout.vendor_id', true), '_2Checkout_vendor_id');
-            $this->Form->fieldText('vendor_id', $this->Html->ifSet($meta['vendor_id']), ['id'=>'_2Checkout_vendor_id']);
+            $this->Form->label($this->_('Checkout2.vendor_id', true), 'Checkout2_vendor_id');
+            $this->Form->fieldText('vendor_id', $this->Html->ifSet($meta['vendor_id']), ['id'=>'Checkout2_vendor_id']);
             ?>
 		</li>
 		<li class="2checkout_v5_field">
 			<?php
-            $this->Form->label($this->_('_2Checkout.merchant_code', true), '_2Checkout_merchant_code');
-            $this->Form->fieldText('merchant_code', $this->Html->ifSet($meta['merchant_code']), ['id'=>'_2Checkout_merchant_code']);
+            $this->Form->label($this->_('Checkout2.merchant_code', true), 'Checkout2_merchant_code');
+            $this->Form->fieldText('merchant_code', $this->Html->ifSet($meta['merchant_code']), ['id'=>'Checkout2_merchant_code']);
             ?>
 		</li>
 		<li class="2checkout_v1_field">
 			<?php
-            $this->Form->label($this->_('_2Checkout.secret_word', true), '_2Checkout_secret_word');
-            $this->Form->fieldText('secret_word', $this->Html->ifSet($meta['secret_word']), ['id'=>'_2Checkout_secret_word']);
+            $this->Form->label($this->_('Checkout2.secret_word', true), 'Checkout2_secret_word');
+            $this->Form->fieldText('secret_word', $this->Html->ifSet($meta['secret_word']), ['id'=>'Checkout2_secret_word']);
             ?>
 		</li>
 		<li class="2checkout_v5_field">
 			<?php
-            $this->Form->label($this->_('_2Checkout.buy_link_secret_word', true), '_2Checkout_buy_link_secret_word');
-            $this->Form->fieldText('buy_link_secret_word', $this->Html->ifSet($meta['buy_link_secret_word']), ['id'=>'_2Checkout_buy_link_secret_word']);
+            $this->Form->label($this->_('Checkout2.buy_link_secret_word', true), 'Checkout2_buy_link_secret_word');
+            $this->Form->fieldText('buy_link_secret_word', $this->Html->ifSet($meta['buy_link_secret_word']), ['id'=>'Checkout2_buy_link_secret_word']);
             ?>
 		</li>
 		<li class="2checkout_v5_field">
 			<?php
-            $this->Form->label($this->_('_2Checkout.secret_key', true), '_2Checkout_secret_key');
-            $this->Form->fieldText('secret_key', $this->Html->ifSet($meta['secret_key']), ['id' => '_2Checkout_secret_key']);
+            $this->Form->label($this->_('Checkout2.secret_key', true), 'Checkout2_secret_key');
+            $this->Form->fieldText('secret_key', $this->Html->ifSet($meta['secret_key']), ['id' => 'Checkout2_secret_key']);
             ?>
 		</li>
 		<li class="2checkout_v1_field">
 			<?php
-            $this->Form->label($this->_('_2Checkout.api_username', true), '_2Checkout_api_username');
-            $this->Form->fieldText('api_username', $this->Html->ifSet($meta['api_username']), ['id'=>'_2Checkout_api_username']);
+            $this->Form->label($this->_('Checkout2.api_username', true), 'Checkout2_api_username');
+            $this->Form->fieldText('api_username', $this->Html->ifSet($meta['api_username']), ['id'=>'Checkout2_api_username']);
             ?>
-			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('_2Checkout.api_username_note');?></div></span>
+			<span class="tooltip"><?php $this->_('AppController.tooltip.text');?> <div><?php $this->_('Checkout2.api_username_note');?></div></span>
 		</li>
 		<li class="2checkout_v1_field">
 			<?php
-            $this->Form->label($this->_('_2Checkout.api_password', true), '_2Checkout_api_password');
-            $this->Form->fieldText('api_password', $this->Html->ifSet($meta['api_password']), ['id'=>'_2Checkout_api_password']);
+            $this->Form->label($this->_('Checkout2.api_password', true), 'Checkout2_api_password');
+            $this->Form->fieldText('api_password', $this->Html->ifSet($meta['api_password']), ['id'=>'Checkout2_api_password']);
             ?>
 		</li>
 		<li class="2checkout_v1_field">
 			<?php
-            $this->Form->fieldCheckbox('sandbox', 'true', ($this->Html->ifSet($meta['sandbox'], 'false') == 'true'), ['id' => '_2Checkout_sandbox']);
-            $this->Form->label($this->_('_2Checkout.sandbox', true), '_2Checkout_sandbox', ['class' => 'inline']);
+            $this->Form->fieldCheckbox('sandbox', 'true', ($this->Html->ifSet($meta['sandbox'], 'false') == 'true'), ['id' => 'Checkout2_sandbox']);
+            $this->Form->label($this->_('Checkout2.sandbox', true), 'Checkout2_sandbox', ['class' => 'inline']);
             ?>
 		</li>
 		<li>
 			<?php
-            $this->Form->fieldCheckbox('test_mode', 'true', ($this->Html->ifSet($meta['test_mode'], 'false') == 'true'), ['id'=>'_2Checkout_test_mode']);
-            $this->Form->label($this->_('_2Checkout.test_mode', true), '_2Checkout_test_mode', ['class'=>'inline']);
+            $this->Form->fieldCheckbox('test_mode', 'true', ($this->Html->ifSet($meta['test_mode'], 'false') == 'true'), ['id'=>'Checkout2_test_mode']);
+            $this->Form->label($this->_('Checkout2.test_mode', true), 'Checkout2_test_mode', ['class'=>'inline']);
             ?>
 		</li>
 	</ul>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#_2Checkout_api_version').change(function () {
+        $('#Checkout2_api_version').change(function () {
             if ($(this).val() === 'v1') {
                 $('.2checkout_v1_field').show();
                 $('.2checkout_v5_field').hide();
@@ -80,6 +80,6 @@
             }
         });
 
-        $('#_2Checkout_api_version').change();
+        $('#Checkout2_api_version').change();
     });
 </script>

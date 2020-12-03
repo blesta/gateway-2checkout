@@ -11,11 +11,11 @@
 
     $this->Form->fieldImage(
         'submit',
-        $this->_('_2Checkout.buildprocess.submit', true),
+        $this->_('Checkout2.buildprocess.submit', true),
         [
             'src' => 'https://www.2checkout.com/upload/images/paymentlogoshorizontal.png',
-            'alt' => $this->_('_2Checkout.buildprocess.submit', true),
-            'title' => $this->_('_2Checkout.buildprocess.submit', true)
+            'alt' => $this->_('Checkout2.buildprocess.submit', true),
+            'title' => $this->_('Checkout2.buildprocess.submit', true)
         ]
     );
 
