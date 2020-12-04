@@ -629,7 +629,7 @@ class Checkout2 extends NonmerchantGateway
             if (empty($params['comment'])) {
                 Loader::loadHelpers($this, ['CurrencyFormat']);
                 $params['comment'] = Language::_(
-                    '2Checkout.refund.comment',
+                    'Checkout2.refund.comment',
                     true,
                     $this->CurrencyFormat->cast($amount, $this->currency)
                 );

@@ -17,7 +17,7 @@ $lang['Checkout2.sandbox'] = 'Sandbox';
 $lang['Checkout2.test_mode'] = 'Test Mode';
 
 // Refund
-$lang['2Checkout.refund.comment'] = 'Initiating a refund for %1$s.'; // %1$s is the refund amount
+$lang['Checkout2.refund.comment'] = 'Initiating a refund for %1$s.'; // %1$s is the refund amount
 
 // Process form
 $lang['Checkout2.buildprocess.submit'] = 'Pay with 2Checkout';

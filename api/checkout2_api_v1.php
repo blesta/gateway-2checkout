@@ -60,7 +60,7 @@ class Checkout2ApiV1 extends Checkout2Api
      * @param string $route The path to the API method
      * @param array $body The data to be sent
      * @param string $method Data transfer method (POST, GET, PUT, DELETE)
-     * @return \_2CheckoutResponse
+     * @return \Checkout2Response
      */
     private function apiRequest($route, array $body, $method)
     {
@@ -102,13 +102,13 @@ class Checkout2ApiV1 extends Checkout2Api
                 'status' => 500
             ];
 
-            return new _2CheckoutResponseV1(['content' => json_encode($error), 'headers' => []]);
+            return new Checkout2ResponseV1(['content' => json_encode($error), 'headers' => []]);
         }
         $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         curl_close($curl);
 
         // Return request response
-        return new _2CheckoutResponseV1(
+        return new Checkout2ResponseV1(
             ['content' => substr($result, $headerSize), 'headers' => explode("\n", substr($result, 0, $headerSize))]
         );
     }
@@ -127,7 +127,7 @@ class Checkout2ApiV1 extends Checkout2Api
      * Refunds a charge in 2Checkout
      *
      * @param array $params A list of parameters for issuing a refund
-     * @return \_2CheckoutResponse
+     * @return \Checkout2Response
      */
     public function refund(array $params)
     {
