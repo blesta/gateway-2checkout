@@ -25,7 +25,7 @@ class Checkout2 extends NonmerchantGateway
         $this->loadConfig(dirname(__FILE__) . DS . 'config.json');
 
         // Load components required by this gateway
-        Loader::loadComponents($this, ['Input', 'Json']);
+        Loader::loadComponents($this, ['Input']);
 
         // Load the language required by this gateway
         Language::loadLang('checkout2', null, dirname(__FILE__) . DS . 'language' . DS);
