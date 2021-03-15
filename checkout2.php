@@ -110,7 +110,7 @@ class Checkout2 extends NonmerchantGateway
             ]
         ];
 
-        if ($this->ifSet($meta['api_version'], 'v1') == 'v1') {
+        if ((isset($meta['api_version']) ? $meta['api_version'] : 'v1') == 'v1') {
             $rules['vendor_id'] = [
                 'empty' => [
                     'rule' => 'isEmpty',
@@ -248,7 +248,7 @@ class Checkout2 extends NonmerchantGateway
         Loader::loadHelpers($this, ['Form', 'Html']);
 
         // Get a list of key/value hidden fields to set for the payment form
-        $api_version = $this->ifSet($this->meta['api_version'], 'v1');
+        $api_version = (isset($this->meta['api_version']) ? $this->meta['api_version'] : 'v1');
         $fields = $this->getOrderFields($contact_info, $amount, $invoice_amounts, $options, $api_version);
 
         $api = $this->getApi($api_version);
@@ -307,13 +307,13 @@ class Checkout2 extends NonmerchantGateway
         $version = 'v1'
     ) {
         $contact_data = [
-            'city' => $this->ifSet($contact_info['city']),
-            'zip' => $this->ifSet($contact_info['zip']),
-            'country' => $this->ifSet($contact_info['country']['alpha3'])
+            'city' => (isset($contact_info['city']) ? $contact_info['city'] : null),
+            'zip' => (isset($contact_info['zip']) ? $contact_info['zip'] : null),
+            'country' => (isset($contact_info['country']['alpha3']) ? $contact_info['country']['alpha3'] : null)
         ];
 
         // Set contact email address and phone number
-        if ($this->ifSet($contact_info['id'], false)) {
+        if ((isset($contact_info['id']) ? $contact_info['id'] : false)) {
             Loader::loadModels($this, ['Contacts']);
             if (($contact = $this->Contacts->get($contact_info['id']))) {
                 $contact_data['email'] = $contact->email;
@@ -329,12 +329,12 @@ class Checkout2 extends NonmerchantGateway
             $data = array_merge(
                 [
                     // Set account/invoice info to use later
-                    'client_id' => $this->ifSet($contact_info['client_id']),
+                    'client_id' => (isset($contact_info['client_id']) ? $contact_info['client_id'] : null),
                     'invoices' => base64_encode(serialize($invoice_amounts)),
                     'currency_code' => $this->currency,
                     // Set required fields
-                    'sid' => $this->ifSet($this->meta['vendor_id']),
-                    'cart_order_id' => $this->ifSet($contact_info['client_id']) . '-' . time(),
+                    'sid' => (isset($this->meta['vendor_id']) ? $this->meta['vendor_id'] : null),
+                    'cart_order_id' => (isset($contact_info['client_id']) ? $contact_info['client_id'] : null) . '-' . time(),
                     'total' => $amount,
                     'pay_method' => 'CC', // default to credit card option
                     'x_Receipt_Link_URL' => Configure::get('Blesta.gw_callback_url')
@@ -342,28 +342,28 @@ class Checkout2 extends NonmerchantGateway
                     // Pre-populate billing information
                     'card_holder_name' => $this->Html->concat(
                         ' ',
-                        $this->ifSet($contact_info['first_name']),
-                        $this->ifSet($contact_info['last_name'])
+                        (isset($contact_info['first_name']) ? $contact_info['first_name'] : null),
+                        (isset($contact_info['last_name']) ? $contact_info['last_name'] : null)
                     ),
-                    'street_address' => $this->ifSet($contact_info['address1']),
-                    'street_address2' => $this->ifSet($contact_info['address2']),
-                    'state' => $this->ifSet($contact_info['state']['code']),
+                    'street_address' => (isset($contact_info['address1']) ? $contact_info['address1'] : null),
+                    'street_address2' => (isset($contact_info['address2']) ? $contact_info['address2'] : null),
+                    'state' => (isset($contact_info['state']['code']) ? $contact_info['state']['code'] : null),
                 ],
                 $contact_data
             );
 
             // Set test mode
-            if ($this->ifSet($this->meta['test_mode']) == 'true') {
+            if ((isset($this->meta['test_mode']) ? $this->meta['test_mode'] : null) == 'true') {
                 $data['demo'] = 'Y';
             }
         } else {
             $data = array_merge(
                 [
                     'currency' => $this->currency,
-                    'customer-ext-ref' => $this->ifSet($contact_info['client_id']),
+                    'customer-ext-ref' => (isset($contact_info['client_id']) ? $contact_info['client_id'] : null),
                     'dynamic' => 1,
                     'item-ext-ref' => base64_encode(serialize($invoice_amounts)),
-                    'merchant' => $this->ifSet($this->meta['merchant_code']),
+                    'merchant' => (isset($this->meta['merchant_code']) ? $this->meta['merchant_code'] : null),
                     'price' => $amount,
                     'prod' => $options['description'],
                     'qty' => 1,
@@ -373,23 +373,23 @@ class Checkout2 extends NonmerchantGateway
                     'tpl' => 'one-column',
                     'type' => 'product',
                     // Pre-populate billing information
-                    'state' => $this->ifSet($contact_info['state']['name']),
-                    'company' => $this->ifSet($contact_info['company']),
+                    'state' => (isset($contact_info['state']['name']) ? $contact_info['state']['name'] : null),
+                    'company' => (isset($contact_info['company']) ? $contact_info['company'] : null),
                     'address' => $this->Html->concat(
                         ' ',
-                        $this->ifSet($contact_info['address1']),
-                        $this->ifSet($contact_info['address2'])
+                        (isset($contact_info['address1']) ? $contact_info['address1'] : null),
+                        (isset($contact_info['address2']) ? $contact_info['address2'] : null)
                     ),
                     'name' => $this->Html->concat(
                         ' ',
-                        $this->ifSet($contact_info['first_name']),
-                        $this->ifSet($contact_info['last_name'])
+                        (isset($contact_info['first_name']) ? $contact_info['first_name'] : null),
+                        (isset($contact_info['last_name']) ? $contact_info['last_name'] : null)
                     ),
                 ],
                 $contact_data
             );
 
-            if ($this->ifSet($this->meta['test_mode']) == 'true') {
+            if ((isset($this->meta['test_mode']) ? $this->meta['test_mode'] : null) == 'true') {
                 $data['test'] = 1;
             }
 
@@ -409,7 +409,7 @@ class Checkout2 extends NonmerchantGateway
             }
 
             $signature = implode('', $signature_values);
-            $data['signature'] = hash_hmac('sha256', $signature, $this->ifSet($this->meta['buy_link_secret_word']));
+            $data['signature'] = hash_hmac('sha256', $signature, (isset($this->meta['buy_link_secret_word']) ? $this->meta['buy_link_secret_word'] : null));
         }
 
         return $data;
@@ -450,9 +450,9 @@ class Checkout2 extends NonmerchantGateway
     public function validate(array $get, array $post)
     {
         $rules = [];
-        if ($this->ifSet($this->meta['api_version'], 'v1') == 'v1') {
+        if ((isset($this->meta['api_version']) ? $this->meta['api_version'] : 'v1') == 'v1') {
             // Order number to verify key must be "1" if demo mode is set
-            $order_number = ($this->ifSet($post['demo']) == 'Y') ? '1' : $this->ifSet($post['order_number']);
+            $order_number = ((isset($post['demo']) ? $post['demo'] : null) == 'Y') ? '1' : (isset($post['order_number']) ? $post['order_number'] : null);
 
             // Validate the response is as expected
             $rules = [
@@ -463,10 +463,10 @@ class Checkout2 extends NonmerchantGateway
                             '==',
                             strtoupper(
                                 md5(
-                                    $this->ifSet($this->meta['secret_word'])
-                                    . $this->ifSet($this->meta['vendor_id'])
+                                    (isset($this->meta['secret_word']) ? $this->meta['secret_word'] : null)
+                                    . (isset($this->meta['vendor_id']) ? $this->meta['vendor_id'] : null)
                                     . $order_number
-                                    . $this->ifSet($post['total'])
+                                    . (isset($post['total']) ? $post['total'] : null)
                                 )
                             )
                         ],
@@ -481,20 +481,20 @@ class Checkout2 extends NonmerchantGateway
                 ],
                 'sid' => [
                     'valid' => [
-                        'rule' => ['compares', '==', $this->ifSet($this->meta['vendor_id'])],
+                        'rule' => ['compares', '==', (isset($this->meta['vendor_id']) ? $this->meta['vendor_id'] : null)],
                         'message' => Language::_('Checkout2.!error.sid.valid', true)
                     ]
                 ]
             ];
         } else {
-            $hash_string = strlen($this->ifSet($post['IPN_PID'][0])) . $this->ifSet($post['IPN_PID'][0])
-                . strlen($this->ifSet($post['IPN_PNAME'][0])) . $this->ifSet($post['IPN_PNAME'][0])
-                . strlen($this->ifSet($post['IPN_DATE'])) . $this->ifSet($post['IPN_DATE'])
-                . strlen($this->ifSet($post['IPN_DATE'])) . $this->ifSet($post['IPN_DATE']);
+            $hash_string = strlen((isset($post['IPN_PID'][0]) ? $post['IPN_PID'][0] : null)) . (isset($post['IPN_PID'][0]) ? $post['IPN_PID'][0] : null)
+                . strlen((isset($post['IPN_PNAME'][0]) ? $post['IPN_PNAME'][0] : null)) . (isset($post['IPN_PNAME'][0]) ? $post['IPN_PNAME'][0] : null)
+                . strlen((isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null)) . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null)
+                . strlen((isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null)) . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null);
 
             // This is to respond to 2Checkout so they know the notification was received
-            echo '<EPAYMENT>' . $this->ifSet($post['IPN_DATE']) . '|'
-                . hash_hmac('md5', $hash_string, $this->ifSet($this->meta['secret_key'])) . '</EPAYMENT>';
+            echo '<EPAYMENT>' . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null) . '|'
+                . hash_hmac('md5', $hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null)) . '</EPAYMENT>';
 
             // Construct a hash to validate the order data sent by 2Checkout
             $ipn_hash_string = '';
@@ -517,7 +517,7 @@ class Checkout2 extends NonmerchantGateway
                         'rule' => [
                             'compares',
                             '==',
-                            hash_hmac('md5', $ipn_hash_string, $this->ifSet($this->meta['secret_key']))
+                            hash_hmac('md5', $ipn_hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null))
                         ],
                         'message' => Language::_('Checkout2.!error.hash.valid', true)
                     ]
@@ -525,31 +525,31 @@ class Checkout2 extends NonmerchantGateway
             ];
 
             // Map fields from the REST 5.0 API to those of the legacy API
-            $post['total'] = $this->ifSet($post['IPN_TOTALGENERAL'], 0);
-            $post['currency_code'] = $this->ifSet($post['CURRENCY'], 'USD');
-            $post['order_number'] = $this->ifSet($post['REFNO']);
-            $post['invoices'] = $this->ifSet($post['IPN_EXTERNAL_REFERENCE'][0]);
-            $post['client_id'] = $this->ifSet($post['EXTERNAL_CUSTOMER_REFERENCE']);
+            $post['total'] = (isset($post['IPN_TOTALGENERAL']) ? $post['IPN_TOTALGENERAL'] : 0);
+            $post['currency_code'] = (isset($post['CURRENCY']) ? $post['CURRENCY'] : 'USD');
+            $post['order_number'] = (isset($post['REFNO']) ? $post['REFNO'] : null);
+            $post['invoices'] = (isset($post['IPN_EXTERNAL_REFERENCE'][0]) ? $post['IPN_EXTERNAL_REFERENCE'][0] : null);
+            $post['client_id'] = (isset($post['EXTERNAL_CUSTOMER_REFERENCE']) ? $post['EXTERNAL_CUSTOMER_REFERENCE'] : null);
         }
 
         $this->Input->setRules($rules);
         $success = $this->Input->validates($post);
 
         // Log the response
-        $this->log($this->ifSet($_SERVER['REQUEST_URI']), serialize($post), 'output', $success);
+        $this->log((isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null), serialize($post), 'output', $success);
 
         if (!$success) {
             return;
         }
 
         return [
-            'client_id' => $this->ifSet($post['client_id']),
-            'amount' => $this->ifSet($post['total']),
-            'currency' => $this->ifSet($post['currency_code']),
-            'invoices' => unserialize(base64_decode($this->ifSet($post['invoices']))),
+            'client_id' => (isset($post['client_id']) ? $post['client_id'] : null),
+            'amount' => (isset($post['total']) ? $post['total'] : null),
+            'currency' => (isset($post['currency_code']) ? $post['currency_code'] : null),
+            'invoices' => unserialize(base64_decode((isset($post['invoices']) ? $post['invoices'] : null))),
             'status' => 'approved',
             'reference_id' => null,
-            'transaction_id' => $this->ifSet($post['order_number']),
+            'transaction_id' => (isset($post['order_number']) ? $post['order_number'] : null),
             'parent_transaction_id' => null
         ];
     }
@@ -574,21 +574,21 @@ class Checkout2 extends NonmerchantGateway
     public function success(array $get, array $post)
     {
         $params = [];
-        if ($this->ifSet($this->meta['api_version'], 'v1') == 'v1') {
+        if ((isset($this->meta['api_version']) ? $this->meta['api_version'] : 'v1') == 'v1') {
             $params = [
-                'client_id' => $this->ifSet($post['client_id']),
-                'amount' => $this->ifSet($post['total']),
-                'currency' => $this->ifSet($post['currency_code']),
-                'invoices' => unserialize(base64_decode($this->ifSet($post['invoices']))),
+                'client_id' => (isset($post['client_id']) ? $post['client_id'] : null),
+                'amount' => (isset($post['total']) ? $post['total'] : null),
+                'currency' => (isset($post['currency_code']) ? $post['currency_code'] : null),
+                'invoices' => unserialize(base64_decode((isset($post['invoices']) ? $post['invoices'] : null))),
                 'status' => 'approved',
-                'transaction_id' => $this->ifSet($post['order_number']),
+                'transaction_id' => (isset($post['order_number']) ? $post['order_number'] : null),
                 'parent_transaction_id' => null
             ];
         } else {
             $params = [
-                'client_id' => $this->ifSet($get['customer-ext-ref']),
-                'amount' => $this->ifSet($get['total']),
-                'currency' => $this->ifSet($get['total-currency']),
+                'client_id' => (isset($get['customer-ext-ref']) ? $get['customer-ext-ref'] : null),
+                'amount' => (isset($get['total']) ? $get['total'] : null),
+                'currency' => (isset($get['total-currency']) ? $get['total-currency'] : null),
                 'invoices' => isset($get['item-ext-ref']) ? unserialize(base64_decode($get['item-ext-ref'])) : [],
                 'status' => 'approved',
                 'transaction_id' => null,
@@ -616,7 +616,7 @@ class Checkout2 extends NonmerchantGateway
     public function refund($reference_id, $transaction_id, $amount, $notes = null)
     {
         $params = [];
-        $api_version = $this->ifSet($this->meta['api_version'], 'v1');
+        $api_version = (isset($this->meta['api_version']) ? $this->meta['api_version'] : 'v1');
         if ($api_version == 'v1') {
             $params = [
                 'sale_id' => $transaction_id,
@@ -679,16 +679,16 @@ class Checkout2 extends NonmerchantGateway
             // Load the 2Checkout API
             Loader::load(dirname(__FILE__) . DS . 'api' . DS . 'checkout2_api_v1.php');
             return new Checkout2ApiV1(
-                $this->ifSet($this->meta['api_username']),
-                $this->ifSet($this->meta['api_password']),
-                $this->ifSet($this->meta['sandbox'], 'false')
+                (isset($this->meta['api_username']) ? $this->meta['api_username'] : null),
+                (isset($this->meta['api_password']) ? $this->meta['api_password'] : null),
+                (isset($this->meta['sandbox']) ? $this->meta['sandbox'] : 'false')
             );
         } else {
             // Load the 2Checkout API
             Loader::load(dirname(__FILE__) . DS . 'api' . DS . 'checkout2_api_v5.php');
             return new Checkout2ApiV5(
-                $this->ifSet($this->meta['merchant_code']),
-                $this->ifSet($this->meta['secret_key'])
+                (isset($this->meta['merchant_code']) ? $this->meta['merchant_code'] : null),
+                (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null)
             );
         }
     }
