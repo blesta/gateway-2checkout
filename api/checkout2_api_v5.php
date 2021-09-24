@@ -92,7 +92,7 @@ class Checkout2ApiV5 extends Checkout2Api
 
         if (Configure::get('Blesta.curl_verify_ssl')) {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
         } else {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
