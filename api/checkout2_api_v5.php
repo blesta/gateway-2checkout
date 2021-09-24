@@ -1,4 +1,6 @@
 <?php
+use Blesta\Core\Util\Common\Traits\Container;
+
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_api.php';
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_response_v5.php';
 
@@ -24,6 +26,9 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'checkout2_response_v5.ph
  */
 class Checkout2ApiV5 extends Checkout2Api
 {
+    // Load traits
+    use Container;
+
     /**
      * @var string The URL to post payments to
      */
@@ -47,6 +52,10 @@ class Checkout2ApiV5 extends Checkout2Api
     {
         $this->merchantCode = $merchantCode;
         $this->secretKey = $secretKey;
+
+        // Initialize logger
+        $logger = $this->getFromContainer('logger');
+        $this->logger = $logger;
     }
 
     /**
@@ -81,6 +90,14 @@ class Checkout2ApiV5 extends Checkout2Api
         curl_setopt($curl, CURLOPT_HEADER, 1);
         curl_setopt($curl, CURLOPT_URL, $url);
 
+        if (Configure::get('Blesta.curl_verify_ssl')) {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+        } else {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+
         $time = gmdate('Y-m-d H:i:s');
         $headers = [];
         $headers[] = 'Content-Type: application/json';
@@ -92,7 +109,10 @@ class Checkout2ApiV5 extends Checkout2Api
 
         $this->lastRequest = ['content' => $body, 'headers' => $headers];
         $result = curl_exec($curl);
+
         if (curl_errno($curl)) {
+            $this->logger->error(curl_error($curl));
+
             $error = [
                 'error' => 'Curl Error',
                 'message' => 'An internal error occurred, or the server did not respond to the request.',
