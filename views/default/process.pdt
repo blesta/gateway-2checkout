@@ -8,15 +8,8 @@
             $this->Form->fieldHidden($key, $value);
         }
     }
-
-    $this->Form->fieldImage(
-        'submit',
-        $this->_('Checkout2.buildprocess.submit', true),
-        [
-            'src' => 'https://www.2checkout.com/upload/images/paymentlogoshorizontal.png',
-            'alt' => $this->_('Checkout2.buildprocess.submit', true),
-            'title' => $this->_('Checkout2.buildprocess.submit', true)
-        ]
-    );
-
+    ?>
+    <button type="submit" class="btn btn-xl btn-success"><?php $this->_('Checkout2.buildprocess.submit'); ?></button>
+    <?php
     $this->Form->end();
+    ?>
