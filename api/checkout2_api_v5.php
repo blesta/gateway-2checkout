@@ -104,7 +104,7 @@ class Checkout2ApiV5 extends Checkout2Api
         $headers[] = 'Accept: application/json';
         $hashString = strlen($this->merchantCode) . $this->merchantCode . strlen($time) . $time;
         $headers[] = 'X-Avangate-Authentication: code="' . $this->merchantCode . '"'
-            . ' date="' . $time . '" hash="' . hash_hmac('md5', $hashString, $this->secretKey) . '"';
+            . ' date="' . $time . '" hash="' . hash_hmac('sha256', $hashString, $this->secretKey) . '" algo=sha256';
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
         $this->lastRequest = ['content' => $body, 'headers' => $headers];
