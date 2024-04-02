@@ -462,7 +462,8 @@ class Checkout2 extends NonmerchantGateway
                             'compares',
                             '==',
                             strtoupper(
-                                hash_hmac('sha256',
+                                hash_hmac(
+                                    'sha256',
                                     (isset($this->meta['secret_word']) ? $this->meta['secret_word'] : null)
                                     . (isset($this->meta['vendor_id']) ? $this->meta['vendor_id'] : null)
                                     . $order_number
@@ -500,7 +501,7 @@ class Checkout2 extends NonmerchantGateway
             // Construct a hash to validate the order data sent by 2Checkout
             $ipn_hash_string = '';
             foreach ($post as $key => $value) {
-                if ($key == 'HASH') {
+                if ($key == 'SIGNATURE_SHA2_256') {
                     continue;
                 }
 
@@ -513,7 +514,7 @@ class Checkout2 extends NonmerchantGateway
 
             // Validate the response is as expected
             $rules = [
-                'HASH' => [
+                'SIGNATURE_SHA2_256' => [
                     'valid' => [
                         'rule' => [
                             'compares',
