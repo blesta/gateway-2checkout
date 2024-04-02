@@ -462,11 +462,13 @@ class Checkout2 extends NonmerchantGateway
                             'compares',
                             '==',
                             strtoupper(
-                                md5(
+                                hash_hmac(
+                                    'sha256',
                                     (isset($this->meta['secret_word']) ? $this->meta['secret_word'] : null)
                                     . (isset($this->meta['vendor_id']) ? $this->meta['vendor_id'] : null)
                                     . $order_number
-                                    . (isset($post['total']) ? $post['total'] : null)
+                                    . (isset($post['total']) ? $post['total'] : null),
+                                    (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null)
                                 )
                             )
                         ],
@@ -494,12 +496,12 @@ class Checkout2 extends NonmerchantGateway
 
             // This is to respond to 2Checkout so they know the notification was received
             echo '<EPAYMENT>' . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null) . '|'
-                . hash_hmac('md5', $hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null)) . '</EPAYMENT>';
+                . hash_hmac('sha256', $hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null)) . '</EPAYMENT>';
 
             // Construct a hash to validate the order data sent by 2Checkout
             $ipn_hash_string = '';
             foreach ($post as $key => $value) {
-                if ($key == 'HASH') {
+                if ($key == 'SIGNATURE_SHA2_256') {
                     continue;
                 }
 
@@ -512,12 +514,12 @@ class Checkout2 extends NonmerchantGateway
 
             // Validate the response is as expected
             $rules = [
-                'HASH' => [
+                'SIGNATURE_SHA2_256' => [
                     'valid' => [
                         'rule' => [
                             'compares',
                             '==',
-                            hash_hmac('md5', $ipn_hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null))
+                            hash_hmac('sha256', $ipn_hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null))
                         ],
                         'message' => Language::_('Checkout2.!error.hash.valid', true)
                     ]
