@@ -495,8 +495,8 @@ class Checkout2 extends NonmerchantGateway
                 . strlen((isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null)) . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null);
 
             // This is to respond to 2Checkout so they know the notification was received
-            echo '<EPAYMENT>' . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null) . '|'
-                . hash_hmac('sha256', $hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null)) . '</EPAYMENT>';
+            $hash = hash_hmac('sha256', $hash_string, ($this->meta['secret_key'] ?? null));
+            echo '<sig algo="sha256" date="' . ($post['IPN_DATE'] ?? null) . '">' . $hash . '</sig>';
 
             // Construct a hash to validate the order data sent by 2Checkout
             $ipn_hash_string = '';
