@@ -330,7 +330,7 @@ class Checkout2 extends NonmerchantGateway
                 [
                     // Set account/invoice info to use later
                     'client_id' => (isset($contact_info['client_id']) ? $contact_info['client_id'] : null),
-                    'invoices' => base64_encode(serialize($invoice_amounts)),
+                    'invoices' => base64_encode($this->serializeInvoices($invoice_amounts)),
                     'currency_code' => $this->currency,
                     // Set required fields
                     'sid' => (isset($this->meta['vendor_id']) ? $this->meta['vendor_id'] : null),
@@ -362,7 +362,7 @@ class Checkout2 extends NonmerchantGateway
                     'currency' => $this->currency,
                     'customer-ext-ref' => (isset($contact_info['client_id']) ? $contact_info['client_id'] : null),
                     'dynamic' => 1,
-                    'item-ext-ref' => base64_encode(serialize($invoice_amounts)),
+                    'item-ext-ref' => base64_encode($this->serializeInvoices($invoice_amounts)),
                     'merchant' => (isset($this->meta['merchant_code']) ? $this->meta['merchant_code'] : null),
                     'price' => $amount,
                     'prod' => $options['description'],
@@ -548,7 +548,7 @@ class Checkout2 extends NonmerchantGateway
             'client_id' => (isset($post['client_id']) ? $post['client_id'] : null),
             'amount' => (isset($post['total']) ? $post['total'] : null),
             'currency' => (isset($post['currency_code']) ? $post['currency_code'] : null),
-            'invoices' => unserialize(base64_decode((isset($post['invoices']) ? $post['invoices'] : null))),
+            'invoices' => $this->unserializeInvoices(base64_decode((isset($post['invoices']) ? $post['invoices'] : null))),
             'status' => 'approved',
             'reference_id' => null,
             'transaction_id' => (isset($post['order_number']) ? $post['order_number'] : null),
@@ -581,7 +581,7 @@ class Checkout2 extends NonmerchantGateway
                 'client_id' => (isset($post['client_id']) ? $post['client_id'] : null),
                 'amount' => (isset($post['total']) ? $post['total'] : null),
                 'currency' => (isset($post['currency_code']) ? $post['currency_code'] : null),
-                'invoices' => unserialize(base64_decode((isset($post['invoices']) ? $post['invoices'] : null))),
+                'invoices' => $this->unserializeInvoices(base64_decode((isset($post['invoices']) ? $post['invoices'] : null))),
                 'status' => 'approved',
                 'transaction_id' => (isset($post['order_number']) ? $post['order_number'] : null),
                 'parent_transaction_id' => null
@@ -591,7 +591,7 @@ class Checkout2 extends NonmerchantGateway
                 'client_id' => (isset($get['customer-ext-ref']) ? $get['customer-ext-ref'] : null),
                 'amount' => (isset($get['total']) ? $get['total'] : null),
                 'currency' => (isset($get['total-currency']) ? $get['total-currency'] : null),
-                'invoices' => isset($get['item-ext-ref']) ? unserialize(base64_decode($get['item-ext-ref'])) : [],
+                'invoices' => isset($get['item-ext-ref']) ? $this->unserializeInvoices(base64_decode($get['item-ext-ref'])) : [],
                 'status' => 'approved',
                 'transaction_id' => null,
                 'parent_transaction_id' => null
@@ -693,5 +693,44 @@ class Checkout2 extends NonmerchantGateway
                 (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null)
             );
         }
+    }
+
+    /**
+     * Serializes an array of invoice info into a string
+     *
+     * @param array $invoices A numerically indexed array of invoices info including:
+     *  - id The ID of the invoice
+     *  - amount The amount relating to the invoice
+     * @return string A serialized string of invoice info in the format of key1=value1|key2=value2
+     */
+    private function serializeInvoices(array $invoices)
+    {
+        $str = '';
+        foreach ($invoices as $i => $invoice) {
+            $str .= ($i > 0 ? '|' : '') . $invoice['id'] . '=' . $invoice['amount'];
+        }
+        return $str;
+    }
+
+    /**
+     * Unserializes a string of invoice info into an array
+     *
+     * @param string $str A serialized string of invoice info in the format of key1=value1|key2=value2
+     * @return array A numerically indexed array of invoices info including:
+     *  - id The ID of the invoice
+     *  - amount The amount relating to the invoice
+     */
+    private function unserializeInvoices($str)
+    {
+        $invoices = [];
+        $temp = explode('|', $str);
+        foreach ($temp as $pair) {
+            $pairs = explode('=', $pair, 2);
+            if (count($pairs) != 2) {
+                continue;
+            }
+            $invoices[] = ['id' => $pairs[0], 'amount' => $pairs[1]];
+        }
+        return $invoices;
     }
 }
