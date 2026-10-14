@@ -459,8 +459,7 @@ class Checkout2 extends NonmerchantGateway
                 'key' => [
                     'valid' => [
                         'rule' => [
-                            'compares',
-                            '==',
+                            [$this, 'matches'],
                             strtoupper(
                                 hash_hmac(
                                     'sha256',
@@ -494,10 +493,6 @@ class Checkout2 extends NonmerchantGateway
                 . strlen((isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null)) . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null)
                 . strlen((isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null)) . (isset($post['IPN_DATE']) ? $post['IPN_DATE'] : null);
 
-            // This is to respond to 2Checkout so they know the notification was received
-            $hash = hash_hmac('sha256', $hash_string, ($this->meta['secret_key'] ?? null));
-            echo '<sig algo="sha256" date="' . ($post['IPN_DATE'] ?? null) . '">' . $hash . '</sig>';
-
             // Construct a hash to validate the order data sent by 2Checkout
             $ipn_hash_string = '';
             foreach ($post as $key => $value) {
@@ -513,18 +508,23 @@ class Checkout2 extends NonmerchantGateway
             }
 
             // Validate the response is as expected
+            $ipn_hash = hash_hmac('sha256', $ipn_hash_string, ($this->meta['secret_key'] ?? null));
             $rules = [
                 'SIGNATURE_SHA2_256' => [
                     'valid' => [
-                        'rule' => [
-                            'compares',
-                            '==',
-                            hash_hmac('sha256', $ipn_hash_string, (isset($this->meta['secret_key']) ? $this->meta['secret_key'] : null))
-                        ],
+                        'rule' => [[$this, 'matches'], $ipn_hash],
                         'message' => Language::_('Checkout2.!error.hash.valid', true)
                     ]
                 ]
             ];
+
+            // Only acknowledge a notification signed by 2Checkout, so it is never signed for anyone else
+            if ($this->matches($post['SIGNATURE_SHA2_256'] ?? null, $ipn_hash)
+                && preg_match('/^[0-9]{14}$/', (string) ($post['IPN_DATE'] ?? ''))
+            ) {
+                $hash = hash_hmac('sha256', $hash_string, ($this->meta['secret_key'] ?? null));
+                echo '<sig algo="sha256" date="' . $post['IPN_DATE'] . '">' . $hash . '</sig>';
+            }
 
             // Map fields from the REST 5.0 API to those of the legacy API
             $post['total'] = (isset($post['IPN_TOTALGENERAL']) ? $post['IPN_TOTALGENERAL'] : 0);
@@ -554,6 +554,18 @@ class Checkout2 extends NonmerchantGateway
             'transaction_id' => (isset($post['order_number']) ? $post['order_number'] : null),
             'parent_transaction_id' => null
         ];
+    }
+
+    /**
+     * Checks that a value is a string matching the expected value exactly
+     *
+     * @param mixed $value The value given
+     * @param string $expected The expected value
+     * @return bool True if the value matches, false otherwise
+     */
+    public function matches($value, $expected)
+    {
+        return is_string($value) && $expected !== '' && hash_equals($expected, $value);
     }
 
     /**
